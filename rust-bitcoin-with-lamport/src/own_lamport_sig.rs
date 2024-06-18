@@ -24,9 +24,9 @@ pub fn key_generation()-> (String, String){
     pub_key = get_sha256(prv_key.clone());
     (prv_key, pub_key)
 }
-pub fn write_keys_to_file(message_len: i8)->Result<(), Error>{
-    let mut private_file = BufWriter::new(File::create("private_keys.txt")?);
-    let mut public_file = BufWriter::new(File::create("public_keys.txt")?);
+pub fn write_keys_to_file(message_len: i8, private_file_path: &str, pub_file_path:&str)->Result<(), Error>{
+    let mut private_file = BufWriter::new(File::create(private_file_path)?);
+    let mut public_file = BufWriter::new(File::create(pub_file_path)?);
 
     for _ in 0..message_len*2{
         let (prv_key, pub_key) = key_generation();
@@ -76,6 +76,34 @@ pub fn verify_signature(message: bool, sig: Vec<String>)-> bool{
             false => 0,
         };
         if check != public_keys[int_bool]{
+            return false
+        }
+    }
+    true
+}
+
+pub fn long_signature(message: Vec<bool>)->Vec<String>{
+    let (private_keys, _) = read_keys_from_files("private_long_keys.txt", "public_long_keys.txt");
+    let mut sig: Vec<String> = vec!();
+    for i in 0..message.len(){
+        if message[i] {
+            sig.push(private_keys[2*i+1].clone());
+        }else {
+            sig.push(private_keys[2*i].clone());
+        }
+    }   
+    sig
+}
+pub fn verify_long_signature(message: Vec<bool>, sig: Vec<String>)-> bool{
+    let (_, public_keys) = read_keys_from_files("private_long_keys.txt", "public_long_keys.txt");
+    
+    for i in 0..message.len(){
+        let check = get_sha256(sig[i].to_string());
+        let int_bool = match message[i] {
+            true => 1,
+            false => 0,
+        };
+        if check != public_keys[2*i + int_bool]{
             return false
         }
     }
