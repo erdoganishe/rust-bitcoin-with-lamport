@@ -27,7 +27,7 @@ pub fn build_script(sig: Vec<String>, message: bool, pub_keys: Vec<String>) -> S
 
     // let pubkey0_bytes = PublicKey::from_str(&pub_keys[0].clone()).unwrap();
     // let pubkey1_bytes = PublicKey::from_str(&pub_keys[1].clone()).unwrap();
-    // let sig_bytes = PublicKey::from_str(&sig[0].clone()).unwrap();
+    // let sig_bytes = PublicKey::from_str(&sig[0].clone()).unwrap();ccccccccccccccccccccccc
     let pubkey0_bytes = decode(pub_keys[0].clone()).expect("Error with decoding public key");
     let mut pubkey0_array: [u8; 32] = [0; 32];
     if pubkey0_bytes.len() == 32 {
