@@ -10,5 +10,5 @@ bdk = "0.29.0"
 sha2 = "0.10.8"
 rand = "0.8.5"
 hex = "0.4.3"
-bitcoin = "0.32.2"
+bitcoin = {version = "0.32.2", features = ["rand-std"]}
 bitcoin_scripts = "0.10.0"
