@@ -1,7 +1,8 @@
 use std::str::FromStr;
 
-use bdk::bitcoin::ScriptBuf;
-use bdk::bitcoin::{opcodes::all::{OP_CHECKSIGVERIFY, OP_ELSE, OP_ENDIF, OP_EQUAL, OP_IF, OP_SHA256}, script::Builder};
+use bitcoin::ScriptBuf;
+use bitcoin::script::Builder;
+use bitcoin::{opcodes::all::{OP_CHECKSIGVERIFY, OP_ELSE, OP_ENDIF, OP_EQUAL, OP_IF, OP_SHA256}};
 use bdk::miniscript::serde::Serialize;
 use bitcoin::script::PushBytes;
 use bitcoin::PublicKey;
