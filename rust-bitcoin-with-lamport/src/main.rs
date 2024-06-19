@@ -28,7 +28,7 @@ fn main() {
             "b67bcaefdab1c1f95e5274d103ca0203819fc80d0b4231a5aec85b813de853e1".to_string()
         )
     );
-    
+
     println!("{}", res_script);
 
     psbt_creation(res_script);
