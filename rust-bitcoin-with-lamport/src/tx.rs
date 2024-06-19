@@ -139,5 +139,8 @@ fn sign_psbt_test(mut psbt2: Psbt, p2sh_address: Address) {
     
     println!("psbt edited: {:#?}", psbt);
     let tx = psbt.extract_tx().unwrap();
+    
     println!("TxId : {}", tx.compute_txid());
+
+    
 }
