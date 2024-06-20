@@ -7,6 +7,7 @@ mod tx;
 use own_lamport_sig::{long_signature, signature, verify_long_signature, write_keys_to_file};
 use script_generation::build_script;
 use tx::psbt_creation;
+// use tx::psbt_creation;
 // use tx_creation::get_descriptor;
 // use tx_creation::tx_creation;
 //use lamport::{generate_keys, sign_message, verify_signature};
@@ -31,7 +32,7 @@ fn main() {
 
     println!("{}", res_script);
 
-    psbt_creation(res_script);
+    psbt_creation(res_script, sig);
     // println!("{}", res_script.to_p2sh());
 
 

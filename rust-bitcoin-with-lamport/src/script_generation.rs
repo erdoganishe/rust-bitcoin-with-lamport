@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+use bitcoin::opcodes::all::OP_EQUALVERIFY;
 use bitcoin::ScriptBuf;
 use bitcoin::script::Builder;
 use bitcoin::{opcodes::all::{OP_CHECKSIGVERIFY, OP_ELSE, OP_ENDIF, OP_EQUAL, OP_IF, OP_SHA256}};
@@ -56,7 +57,22 @@ pub fn build_script(sig: Vec<String>, message: bool, pub_keys: Vec<String>) -> S
     // let sig_bytes: &PushBytes =  <&PushBytes>::try_from(sig[0].clone().as_bytes()).unwrap();
 
     //script sig / witness
+    // let script_builer: ScriptBuf = Builder::new()
+    //     .push_int(message_int)
+    //     .push_int(0)
+    //     .push_opcode(OP_EQUAL)
+    //     .push_opcode(OP_IF)
+    //     .push_slice(&pubkey0_array)
+    //     .push_opcode(OP_ELSE)
+    //     .push_slice(&pubkey1_array)
+    //     .push_opcode(OP_ENDIF)
+    //     .push_slice(&sig_array)
+    //     .push_opcode(OP_SHA256)
+    //     .push_opcode(OP_CHECKSIGVERIFY)
+    //     .into_script();
+
     let script_builer: ScriptBuf = Builder::new()
+        .push_opcode(OP_SHA256)
         .push_int(message_int)
         .push_int(0)
         .push_opcode(OP_EQUAL)
@@ -65,10 +81,7 @@ pub fn build_script(sig: Vec<String>, message: bool, pub_keys: Vec<String>) -> S
         .push_opcode(OP_ELSE)
         .push_slice(&pubkey1_array)
         .push_opcode(OP_ENDIF)
-        .push_slice(&sig_array)
-        .push_opcode(OP_SHA256)
         .push_opcode(OP_CHECKSIGVERIFY)
         .into_script();
-
     script_builer
 }
