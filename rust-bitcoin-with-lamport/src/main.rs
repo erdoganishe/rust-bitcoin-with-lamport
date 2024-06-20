@@ -6,7 +6,9 @@ mod tx;
 
 use own_lamport_sig::{long_signature, signature, verify_long_signature, write_keys_to_file};
 use script_generation::build_script;
-use tx::psbt_creation;
+use tx::gen_input_tx;
+use tx_creation::get_address_from_public_key;
+// use tx::{gen_input_tx, psbt_creation};
 // use tx::psbt_creation;
 // use tx_creation::get_descriptor;
 // use tx_creation::tx_creation;
@@ -30,9 +32,15 @@ fn main() {
         )
     );
 
-    println!("{}", res_script);
+    // println!("{}", res_script);
+    println!("{}", res_script.to_p2sh());
+    let s =  res_script.to_hex_string();
+    println!("Address: {}", get_address_from_public_key());
 
-    psbt_creation(res_script, sig);
+    let script: bdk::bitcoin::ScriptBuf = bdk::bitcoin::ScriptBuf::from_hex(&s).unwrap();
+    println!("{}", script.to_p2sh());
+    gen_input_tx(script);
+    // psbt_creation(res_script, sig);
     // println!("{}", res_script.to_p2sh());
 
 
