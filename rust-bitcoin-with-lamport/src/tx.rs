@@ -1,10 +1,11 @@
 
 use bdk::bitcoin::address;
-use bdk::bitcoin::psbt::PartiallySignedTransaction;
+use bdk::bitcoin::psbt::{Input, Output, PartiallySignedTransaction};
 use bdk::bitcoincore_rpc::RawTx;
-use bdk::miniscript::psbt;
+use bdk::miniscript::psbt::{self, PsbtInputExt};
+use bdk::miniscript::{DefiniteDescriptorKey, Descriptor};
 use bdk::signer::{InputSigner, SignerContext, SignerWrapper};
-use bdk::{wallet, SignOptions};
+use bdk::{descriptor, wallet, SignOptions};
 use bitcoin::bip32::{DerivationPath, Fingerprint};
 use bitcoin::witness_version::WitnessVersion;
 use bitcoin::{WPubkeyHash, WitnessProgram};
@@ -27,7 +28,7 @@ use std::fs::File;
 use std::io::Write;
 use std::io::{BufRead, BufReader};
 use std::str::FromStr;
-
+use crate::tx::descriptor::DescriptorPublicKey;
 use crate::tx;
 
 
@@ -87,13 +88,12 @@ fn gen_keys() -> (PrivateKey, PublicKey, Secp256k1<All>) {
 
 pub fn gen_input_tx(script: ScriptBuf) {
        let mut psbt: PartiallySignedTransaction = PartiallySignedTransaction::from_unsigned_tx(bdk::bitcoin::Transaction {
-
-       
+      
         version: 2,
         lock_time: bdk::bitcoin::absolute::LockTime::from_consensus(1257139),
         input: vec![
             TxIn {previous_output:OutPoint{
-                txid:"028324afeb3ea0eaf694d776b6d937c808d2c1801fc3b21847afaf0e793fbcc0".parse().unwrap(),
+                txid:"af8e170648e669fe33a6f366ba523bd17946f7f1911def5b2d59a548685566da".parse().unwrap(),
                 vout:0,
             },
             sequence: Sequence::default(), 
@@ -107,7 +107,23 @@ pub fn gen_input_tx(script: ScriptBuf) {
             value: 100000, 
         }],
     }).unwrap();
+    let mut psbt_input = Input{
+        sighash_type: None,
+        witness_utxo:  
+            Some(TxOut {
+                script_pubkey: ScriptBuf::from_hex("0014e091ea6aae6adaaea8ee0d5336af169589e0cc98").expect("Valid Script"),
+                value: 100000000,
+            }),
+            ..Default::default() 
+    };
 
+    let descriptor_str = "wsh(pk(02a1f1ad0fe384b05504f8233209bad9e396f3f86b591e877dc1f95394306d9b94))";
+    let descriptor = descriptor_str.parse::<Descriptor<DefiniteDescriptorKey>>().unwrap();
+
+    psbt_input.update_with_descriptor_unchecked(&descriptor).unwrap();
+    psbt.inputs.push(psbt_input);
+    psbt.outputs.push(Output::default());
+    
     sign_input_tx(psbt);
 
 }
@@ -142,7 +158,7 @@ pub fn gen_input_tx(script: ScriptBuf) {
 
 pub fn sign_input_tx(mut psbt: PartiallySignedTransaction){
 
-    let private_key = "L5CqZQMqPvkeCMARGryB4gW62t25PqYAz5UjSEuYUyf7MpHKqzYD";
+    let private_key = "cVm5SC4zJYMbz8jHpZkTGQXxbwtyhX76dKb8HVKLnmxS6bbpxVjD";
 
     let xpriv: bdk::bitcoin::PrivateKey = bdk::bitcoin::PrivateKey::from_wif(&private_key).unwrap();
     let signer: SignerWrapper<bdk::bitcoin::PrivateKey> = SignerWrapper::new(
@@ -153,6 +169,11 @@ pub fn sign_input_tx(mut psbt: PartiallySignedTransaction){
         trust_witness_utxo: true,    
         ..Default::default()    
     };
+    let tx: Transaction = psbt.clone().extract_tx();
+    let tx_hex = tx.raw_hex();
+    println!("TxId: {}", tx.txid());
+    println!("TxheX : {}", tx_hex);
+
     let _ = signer.sign_input(& mut psbt, Default::default(), &sign_options, &bdk::bitcoin::secp256k1::Secp256k1::new());
 
     let tx: Transaction = psbt.extract_tx();
