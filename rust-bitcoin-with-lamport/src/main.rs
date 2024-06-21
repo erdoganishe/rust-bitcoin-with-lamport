@@ -3,6 +3,7 @@ mod own_lamport_sig;
 mod tx_creation;
 mod tx;
 mod test;
+mod bip_test;
 
 use own_lamport_sig::{long_signature, signature, verify_long_signature, write_keys_to_file};
 use script_generation::build_script;

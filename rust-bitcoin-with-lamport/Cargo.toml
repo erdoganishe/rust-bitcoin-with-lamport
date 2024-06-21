@@ -12,3 +12,4 @@ rand = "0.8.5"
 hex = "0.4.3"
 bitcoin = {version = "0.32.2", features = ["rand-std"]}
 bitcoin_scripts = "0.10.0"
+bip32 = "0.5.1"
