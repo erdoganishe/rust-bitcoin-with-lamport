@@ -3,6 +3,7 @@ extern crate bitcoin;
 
 use std::collections::BTreeMap;
 use std::default;
+use std::str::FromStr;
 
 use bdk::bitcoin::absolute::{LockTime, Time};
 use bdk::bitcoin::consensus::encode::serialize;
@@ -14,7 +15,7 @@ use bdk::miniscript::descriptor::{Descriptor, DefiniteDescriptorKey};
 use bdk::miniscript::psbt::PsbtInputExt;
 use bdk::signer::{InputSigner, SignOptions, SignerContext, SignerWrapper};
 use bdk::bitcoin::bip32::{ExtendedPrivKey, DerivationPath};
-use bdk::bitcoin::secp256k1::Secp256k1;
+use bdk::bitcoin::secp256k1::{ecdsa, Secp256k1};
 use bdk::bitcoin::network::constants::Network;
 use bdk::bitcoin::key::PrivateKey;
 
@@ -109,9 +110,14 @@ pub fn gen_input_tx_test() {
 
 fn create_witness(sig: &Signature, pubkey: &PublicKey) -> Witness {
     let mut witness = Witness::new();
-    witness.push(sig.to_vec());
-    witness.push(pubkey.to_bytes());
 
+    let sig_str = sig.sig.to_string();
+    let sig_type = sig.hash_ty;
+
+    println!("{}", sig_str);
+    println!("{}", sig_type);
+    let ser_sig: ecdsa::SerializedSignature = ecdsa::SerializedSignature::from_signature(& sig.sig);
+    witness.push_bitcoin_signature(&ser_sig, bdk::bitcoin::sighash::EcdsaSighashType::All);
     witness    
 }
 
