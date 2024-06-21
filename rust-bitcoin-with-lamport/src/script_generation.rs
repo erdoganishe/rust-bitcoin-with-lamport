@@ -71,6 +71,7 @@ pub fn build_script(sig: Vec<String>, message: bool, pub_keys: Vec<String>) -> S
     //     .push_opcode(OP_CHECKSIGVERIFY)
     //     .into_script();
 
+
     let script_builer: ScriptBuf = Builder::new()
         .push_opcode(OP_SHA256)
         .push_int(message_int)

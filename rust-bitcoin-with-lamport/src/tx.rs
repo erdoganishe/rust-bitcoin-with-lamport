@@ -125,7 +125,6 @@ pub fn gen_input_tx(script: ScriptBuf) {
     psbt.outputs.push(Output::default());
     
     sign_input_tx(psbt);
-
 }
 // fn sign_input_tx(psbt: &mut Psbt, script_buf: ScriptBuf) {
 //     let (priv_key, pub_key, secp) = gen_keys();
@@ -174,8 +173,8 @@ pub fn sign_input_tx(mut psbt: PartiallySignedTransaction){
     println!("TxId: {}", tx.txid());
     println!("TxheX : {}", tx_hex);
 
-    let _ = signer.sign_input(& mut psbt, Default::default(), &sign_options, &bdk::bitcoin::secp256k1::Secp256k1::new());
-
+    let _ = signer.sign_input(& mut psbt, 0, &sign_options, &bdk::bitcoin::secp256k1::Secp256k1::new());
+    println!("partial_sigs: {:#?}", psbt.inputs[0].clone().partial_sigs);  
     let tx: Transaction = psbt.extract_tx();
     let tx_hex = tx.raw_hex();
     println!("TxId: {}", tx.txid());
