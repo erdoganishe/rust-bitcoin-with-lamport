@@ -1,35 +1,35 @@
 
-use bdk::bitcoin::address;
+
 use bdk::bitcoin::psbt::{Input, Output, PartiallySignedTransaction};
 use bdk::bitcoincore_rpc::RawTx;
-use bdk::miniscript::psbt::{self, PsbtInputExt};
+use bdk::miniscript::psbt::{PsbtInputExt};
 use bdk::miniscript::{DefiniteDescriptorKey, Descriptor};
 use bdk::signer::{InputSigner, SignerContext, SignerWrapper};
-use bdk::{descriptor, wallet, SignOptions};
-use bitcoin::bip32::{DerivationPath, Fingerprint};
-use bitcoin::witness_version::WitnessVersion;
-use bitcoin::{WPubkeyHash, WitnessProgram};
-use bitcoin::absolute::{self};
-use bitcoin::address::Address;
-use bitcoin::hashes::Hash;
-use bitcoin::psbt::SigningKeys;
-use bitcoin::script::Builder;
-use bitcoin::secp256k1::{self, ecdsa, All, SecretKey};
+use bdk::{SignOptions};
+
+
+
+
+
+
+
+
+use bitcoin::secp256k1::{All, SecretKey};
 use bitcoin::{NetworkKind, PrivateKey, PublicKey};
-use bitcoin::secp256k1::{Secp256k1, Message};
-use bitcoin::ecdsa::Signature;
+use bitcoin::secp256k1::{Secp256k1};
+
 use bdk::bitcoin::ScriptBuf;
-use bitcoin::Network;
-use bdk::bitcoin::{transaction, Amount, OutPoint, Script, Sequence, Transaction, TxIn, TxOut, Witness};
-use hex::{decode, FromHex};
+
+use bdk::bitcoin::{OutPoint, Sequence, Transaction, TxIn, TxOut, Witness};
+use hex::{FromHex};
 use rand::thread_rng;
-use std::collections::BTreeMap;
-use std::fs::File;
-use std::io::Write;
-use std::io::{BufRead, BufReader};
-use std::str::FromStr;
-use crate::tx::descriptor::DescriptorPublicKey;
-use crate::tx;
+
+
+
+
+
+
+
 
 
 
@@ -159,7 +159,7 @@ pub fn sign_input_tx(mut psbt: PartiallySignedTransaction){
 
     let private_key = "cVm5SC4zJYMbz8jHpZkTGQXxbwtyhX76dKb8HVKLnmxS6bbpxVjD";
 
-    let xpriv: bdk::bitcoin::PrivateKey = bdk::bitcoin::PrivateKey::from_wif(&private_key).unwrap();
+    let xpriv: bdk::bitcoin::PrivateKey = bdk::bitcoin::PrivateKey::from_wif(private_key).unwrap();
     let signer: SignerWrapper<bdk::bitcoin::PrivateKey> = SignerWrapper::new(
         xpriv,
         SignerContext::Segwitv0

@@ -1,11 +1,11 @@
-use bdk::bitcoin::network::message;
+
 use bitcoin::io::Error;
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
 use std::fs::File;
 use std::io::{Write, BufWriter, BufReader, BufRead};
 use sha2::{Sha256, Digest};
-use hex;
+
 
 pub fn get_sha256(data:String)->String{
     let mut hasher = Sha256::new();
@@ -14,14 +14,14 @@ pub fn get_sha256(data:String)->String{
 }
 
 pub fn key_generation()-> (String, String){
-    let pub_key:String;
-    let prv_key:String;
+    
+    
 
     let mut rng = thread_rng();
-    prv_key = get_sha256((0..16)
+    let prv_key:String = get_sha256((0..16)
     .map(|_| rng.sample(Alphanumeric) as char)
     .collect());
-    pub_key = get_sha256(prv_key.clone());
+    let pub_key:String = get_sha256(prv_key.clone());
     (prv_key, pub_key)
 }
 pub fn write_keys_to_file(message_len: i8, private_file_path: &str, pub_file_path:&str)->Result<(), Error>{

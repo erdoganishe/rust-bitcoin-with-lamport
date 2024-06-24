@@ -1,12 +1,12 @@
-use std::str::FromStr;
 
-use bitcoin::opcodes::all::OP_EQUALVERIFY;
+
+
 use bitcoin::ScriptBuf;
 use bitcoin::script::Builder;
 use bitcoin::{opcodes::all::{OP_CHECKSIGVERIFY, OP_ELSE, OP_ENDIF, OP_EQUAL, OP_IF, OP_SHA256}};
-use bdk::miniscript::serde::Serialize;
-use bitcoin::script::PushBytes;
-use bitcoin::PublicKey;
+
+
+
 use hex::decode;
 
 
@@ -78,9 +78,9 @@ pub fn build_script(sig: Vec<String>, message: bool, pub_keys: Vec<String>) -> S
         .push_int(0)
         .push_opcode(OP_EQUAL)
         .push_opcode(OP_IF)
-        .push_slice(&pubkey0_array)
+        .push_slice(pubkey0_array)
         .push_opcode(OP_ELSE)
-        .push_slice(&pubkey1_array)
+        .push_slice(pubkey1_array)
         .push_opcode(OP_ENDIF)
         .push_opcode(OP_CHECKSIGVERIFY)
         .into_script();
